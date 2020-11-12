@@ -81,8 +81,8 @@
       can upload squared images that are at least 250&times;250px in size.
     </p>
     <p>
-      Start by clicking on the boxes below to select four images. If you
-      select more that one, they are put into the subsequent boxes.
+      Simply select four images with the boxes below. If you
+      select more than one file, they are put into the subsequent boxes.
     </p>
   </header>
 
