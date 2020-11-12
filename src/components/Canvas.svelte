@@ -7,7 +7,6 @@
 
   export let drawables: HTMLImageElement[] = [];
   export let triangleHeight: number;
-  export let showLines = true;
   export let canvas: HTMLCanvasElement | null = null;
 
   const dispatch = createEventDispatcher();
@@ -183,7 +182,6 @@
       <strong>A{i}</strong>
       <TriangleProcessing
         {...setup}
-        showLines="{showLines}"
         inputValues="{inputValues}"
         scalingFactor="{magicScale}"
         on:finish="{(ev) => onProcessingFinish(ev, line, i)}" />

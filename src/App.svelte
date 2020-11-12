@@ -4,7 +4,6 @@
 
   let canvasSection: HTMLElement;
   let canvasComponent: any & { canvas: HTMLCanvasElement };
-  let showLines = true;
   let triangleHeight = 200;
 
   let previewVisible = false;
@@ -110,7 +109,6 @@
         bind:this={canvasComponent}
         drawables="{imageElements}"
         triangleHeight="{triangleHeight}"
-        showLines="{showLines}"
         on:finish={onFinish}/>
     </section>
     <section>

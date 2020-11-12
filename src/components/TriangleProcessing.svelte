@@ -27,7 +27,11 @@
   export let scalingFactor: number;
   export let clippingTriangle: TriangleDef;
   export let relativeRectangle: Rectangle;
-  export let showLines: boolean;
+
+  /**
+   * @deprecated remove from application
+   */
+  let showLines = false;
 
   let toTriangleCanvas: HTMLCanvasElement | null = null;
   let rotatedTriangleCanvas: HTMLCanvasElement | null = null;
