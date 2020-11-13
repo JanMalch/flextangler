@@ -17,7 +17,7 @@
     imageElements = []; // make canvas not ready while images are loading
     loadedImages.forEach((img) => {
       if (img?.src != null) {
-        URL.revokeObjectURL(img.src)
+        URL.revokeObjectURL(img.src);
       }
     });
     loadedImages = fileList.map((file) => ({
@@ -158,14 +158,14 @@
   }
 
   @media (max-width: 599px) {
-      section {
-          margin: 32px 0;
-      }
+    section {
+      margin: 32px 0;
+    }
 
-      .btn {
-          display: block;
-          width: 80%;
-          margin: 16px auto;
-      }
+    .btn {
+      display: block;
+      width: 80%;
+      margin: 16px auto;
+    }
   }
 </style>

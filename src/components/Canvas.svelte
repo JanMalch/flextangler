@@ -158,7 +158,7 @@
     line: number,
     index: number
   ) {
-    checks(isDefined(ctx), 'Canvas context must be available')
+    checks(isDefined(ctx), 'Canvas context must be available');
     if (line % 2 === 0) {
       if (index === 0) {
         ctx.drawImage(

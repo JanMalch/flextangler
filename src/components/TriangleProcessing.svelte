@@ -3,10 +3,7 @@
   import { drawImage, inClip } from '../drawing/utils';
   import { ORIGIN } from '../factories';
   import { magicWidth } from '../formulas/content';
-  import type {
-    InputValues, ProcessingOptions,
-    TriangleDef,
-  } from '../types';
+  import type { InputValues, ProcessingOptions, TriangleDef } from '../types';
 
   export let options: ProcessingOptions;
 
@@ -25,7 +22,11 @@
   let fullRotatedTriangleCanvas: HTMLCanvasElement; //  | null = null;
   let scaledRotatedTriangleCanvas: HTMLCanvasElement; //  | null = null;
 
-  $: secondCanvasDimensions = options?.secondCanvasDimensions ?? ((width, height) => ({ width, height })) as NonNullable<ProcessingOptions["secondCanvasDimensions"]>;
+  $: secondCanvasDimensions =
+    options?.secondCanvasDimensions ??
+    (((width, height) => ({ width, height })) as NonNullable<
+      ProcessingOptions['secondCanvasDimensions']
+    >);
 
   const dispatch = createEventDispatcher();
 
