@@ -23,7 +23,7 @@
 
 <form>
   {#each inputs as _, i}
-    <div class="box-shadow" style="grid-area: {String.fromCharCode(i + 97)}">
+    <div class="box-shadow">
       {#if images[i] != null}
         <img src="{images[i].src}" alt="{images[i].alt}}" />
       {/if}
