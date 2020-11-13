@@ -1,6 +1,5 @@
 import { ORIGIN, p } from '../factories';
 import { glueSideParts, glueTopParts } from '../formulas/glue';
-import { degreeToRadian } from '../formulas/math';
 import type { InputValues, Point, Triangle } from '../types';
 import { moveAlongPath, movePointlike } from './utils';
 
@@ -75,7 +74,7 @@ export function drawGlue(
       sidePart,
       p(
         sidePart.x + sidePart.points[1].x,
-        sidePart.y + (sidePart.points[1].y / 2)
+        sidePart.y + sidePart.points[1].y / 2
       ),
       'middle',
       () => ctx.translate(glueWidth / 2, 0)

@@ -1,6 +1,3 @@
-import { magicWidth } from './formulas/content';
-import { degreeToRadian } from './formulas/math';
-
 /**
  * Describes a single point.
  */
@@ -51,8 +48,11 @@ export interface NaturalImage {
 }
 
 export interface ProcessingOptions {
-  rotation?: (canvas: HTMLCanvasElement, prev: HTMLCanvasElement) =>void;
-  secondRotation?: (canvas: HTMLCanvasElement, prev: HTMLCanvasElement) =>void;
-  secondCanvasDimensions?: (defaultWidth: number, defaultHeight: number) => RectangleDef;
+  rotation?: (canvas: HTMLCanvasElement, prev: HTMLCanvasElement) => void;
+  secondRotation?: (canvas: HTMLCanvasElement, prev: HTMLCanvasElement) => void;
+  secondCanvasDimensions?: (
+    defaultWidth: number,
+    defaultHeight: number
+  ) => RectangleDef;
   relativeRectangle: Rectangle;
 }
