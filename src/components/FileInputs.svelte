@@ -27,7 +27,7 @@
       {#if images[i] != null}
         <img src="{images[i].src}" alt="{images[i].alt}}" />
       {/if}
-      <label on:click="{() => inputs[i]?.click()}" for="file-{i}">
+      <label for="file-{i}">
         {images[i] == null ? `Select one ${i !== 3 ? 'or more' : ''} image${i === 3 ? '' : 's'}.` : 'Swap image.'}
       </label>
       <input
