@@ -1,3 +1,6 @@
+import { magicWidth } from './formulas/content';
+import { degreeToRadian } from './formulas/math';
+
 /**
  * Describes a single point.
  */
@@ -47,4 +50,9 @@ export interface NaturalImage {
   naturalHeight: number;
 }
 
-export type Drawable = CanvasImageSource | string; // TODO: 4.1 BETA? for generic string patterns (#rrggbb)
+export interface ProcessingOptions {
+  rotation?: (canvas: HTMLCanvasElement, prev: HTMLCanvasElement) =>void;
+  secondRotation?: (canvas: HTMLCanvasElement, prev: HTMLCanvasElement) =>void;
+  secondCanvasDimensions?: (defaultWidth: number, defaultHeight: number) => RectangleDef;
+  relativeRectangle: Rectangle;
+}

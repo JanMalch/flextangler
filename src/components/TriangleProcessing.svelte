@@ -4,46 +4,35 @@
   import { ORIGIN } from '../factories';
   import { magicWidth } from '../formulas/content';
   import type {
-    InputValues,
-    Rectangle,
-    RectangleDef,
+    InputValues, ProcessingOptions,
     TriangleDef,
   } from '../types';
 
+  export let options: ProcessingOptions;
+
   export let image: HTMLImageElement;
   export let inputValues: InputValues;
-  export let rotation: (
-    canvas: HTMLCanvasElement,
-    previous: HTMLCanvasElement
-  ) => void;
-  export let secondRotation: (
-    canvas: HTMLCanvasElement,
-    previous: HTMLCanvasElement
-  ) => void;
-  export let secondCanvasDimensions: (
-    defaultWidth: number,
-    defaultHeight: number
-  ) => RectangleDef = (w, h) => ({ width: w, height: h });
   export let scalingFactor: number;
   export let clippingTriangle: TriangleDef;
-  export let relativeRectangle: Rectangle;
 
   /**
    * @deprecated remove from application
    */
   let showLines = false;
 
-  let toTriangleCanvas: HTMLCanvasElement | null = null;
-  let rotatedTriangleCanvas: HTMLCanvasElement | null = null;
-  let fullRotatedTriangleCanvas: HTMLCanvasElement | null = null;
-  let scaledRotatedTriangleCanvas: HTMLCanvasElement | null = null;
+  let toTriangleCanvas: HTMLCanvasElement; //  | null = null;
+  let rotatedTriangleCanvas: HTMLCanvasElement; //  | null = null;
+  let fullRotatedTriangleCanvas: HTMLCanvasElement; //  | null = null;
+  let scaledRotatedTriangleCanvas: HTMLCanvasElement; //  | null = null;
+
+  $: secondCanvasDimensions = options?.secondCanvasDimensions ?? ((width, height) => ({ width, height })) as NonNullable<ProcessingOptions["secondCanvasDimensions"]>;
 
   const dispatch = createEventDispatcher();
 
   afterUpdate(() => redraw());
 
   function loadIntoTriangleCanvas() {
-    const ctx = toTriangleCanvas.getContext('2d');
+    const ctx = toTriangleCanvas!.getContext('2d')!;
     ctx.clearRect(0, 0, toTriangleCanvas.width, toTriangleCanvas.height);
     ctx.save();
 
@@ -67,10 +56,10 @@
             height: toTriangleCanvas.height,
           },
           {
-            x: relativeRectangle.x * image.naturalWidth,
-            y: relativeRectangle.y * image.naturalHeight,
-            width: relativeRectangle.width * image.naturalWidth,
-            height: relativeRectangle.height * image.naturalHeight,
+            x: options.relativeRectangle.x * image.naturalWidth,
+            y: options.relativeRectangle.y * image.naturalHeight,
+            width: options.relativeRectangle.width * image.naturalWidth,
+            height: options.relativeRectangle.height * image.naturalHeight,
           }
         );
       }
@@ -80,10 +69,10 @@
   }
 
   function loadIntoRotatedCanvas() {
-    const ctx = rotatedTriangleCanvas.getContext('2d');
+    const ctx = rotatedTriangleCanvas!.getContext('2d')!;
     ctx.save();
-    if (rotation) {
-      rotation(rotatedTriangleCanvas, toTriangleCanvas);
+    if (options.rotation) {
+      options.rotation(rotatedTriangleCanvas, toTriangleCanvas);
     } else {
       ctx.drawImage(toTriangleCanvas, 0, 0);
     }
@@ -91,10 +80,10 @@
   }
 
   function loadIntoFullRotatedCanvas() {
-    const ctx = fullRotatedTriangleCanvas.getContext('2d');
+    const ctx = fullRotatedTriangleCanvas!.getContext('2d')!;
     ctx.save();
-    if (secondRotation) {
-      secondRotation(fullRotatedTriangleCanvas, rotatedTriangleCanvas);
+    if (options.secondRotation) {
+      options.secondRotation(fullRotatedTriangleCanvas, rotatedTriangleCanvas);
     } else {
       ctx.drawImage(rotatedTriangleCanvas, 0, 0);
     }
@@ -102,7 +91,7 @@
   }
 
   function loadIntoScaledCanvas() {
-    const ctx = scaledRotatedTriangleCanvas.getContext('2d');
+    const ctx = scaledRotatedTriangleCanvas!.getContext('2d')!;
     ctx.save();
     drawImage(
       ctx,

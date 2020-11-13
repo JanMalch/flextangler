@@ -1,9 +1,11 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
+  import { checks, isDefined } from 'ts-code-contracts';
   import { drawGlue } from '../drawing/glue';
   import { magicScale, magicWidth } from '../formulas/content';
   import { degreeToRadian } from '../formulas/math';
   import { leftwardTriangle, rightwardTriangle } from '../shapes';
+  import type { ProcessingOptions } from '../types';
   import TriangleProcessing from './TriangleProcessing.svelte';
 
   export let drawables: HTMLImageElement[] = [];
@@ -24,7 +26,7 @@
     }
   }
 
-  const lookup = [
+  const lookup: ProcessingOptions[] = [
     {
       relativeRectangle: {
         x: 0.5 - magicWidth,
@@ -43,12 +45,12 @@
     },
     {
       rotation: (canvas, prev) => {
-        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        const ctx = canvas.getContext('2d')!;
         ctx.rotate(degreeToRadian(-90));
         ctx.drawImage(prev, prev.width * -1, 0);
       },
       secondRotation: (canvas, prev) => {
-        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        const ctx = canvas.getContext('2d')!;
         ctx.translate(0, canvas.height / 2);
         ctx.rotate(degreeToRadian(-30));
         ctx.drawImage(prev, 0, 0);
@@ -66,12 +68,12 @@
     },
     {
       rotation: (canvas, prev) => {
-        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        const ctx = canvas.getContext('2d')!;
         ctx.rotate(degreeToRadian(-30));
         ctx.drawImage(prev, 0, 0);
       },
       secondRotation: (canvas, prev) => {
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d')!;
         ctx.rotate(degreeToRadian(-90));
         ctx.drawImage(prev, -1 * inputValues.triangleBase, 0);
       },
@@ -88,12 +90,12 @@
     },
     {
       rotation: (canvas, prev) => {
-        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        const ctx = canvas.getContext('2d')!;
         ctx.rotate(degreeToRadian(90));
         ctx.drawImage(prev, 0, canvas.width * -1);
       },
       secondRotation: (canvas, prev) => {
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d')!;
         ctx.translate(canvas.width, canvas.height);
         ctx.rotate(degreeToRadian(30));
         ctx.drawImage(prev, -1 * canvas.height, -1 * canvas.width);
@@ -111,13 +113,13 @@
     },
     {
       rotation: (canvas, prev) => {
-        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        const ctx = canvas.getContext('2d')!;
         ctx.translate(canvas.width, 0);
         ctx.rotate(degreeToRadian(90));
         ctx.drawImage(prev, 0, 0);
       },
       secondRotation: (canvas, prev) => {
-        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        const ctx = canvas.getContext('2d')!;
         ctx.rotate(degreeToRadian(30));
         ctx.drawImage(prev, 0, 0);
       },
@@ -152,10 +154,11 @@
       );
 
   function onProcessingFinish(
-    { detail: partialCanvas },
+    { detail: partialCanvas }: { detail: HTMLCanvasElement },
     line: number,
     index: number
   ) {
+    checks(isDefined(ctx), 'Canvas context must be available')
     if (line % 2 === 0) {
       if (index === 0) {
         ctx.drawImage(
@@ -188,7 +191,9 @@
     {#each triangleSetups as setup, i}
       <strong>A{i}</strong>
       <TriangleProcessing
-        {...setup}
+        options="{setup}"
+        image="{setup.image}"
+        clippingTriangle="{setup.clippingTriangle}"
         inputValues="{inputValues}"
         scalingFactor="{magicScale}"
         on:finish="{(ev) => onProcessingFinish(ev, line, i)}" />

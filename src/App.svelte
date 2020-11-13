@@ -8,24 +8,28 @@
 
   let previewVisible = false;
 
-  let loadedImages: Array<{ src: string; alt: string }> = [];
+  let loadedImages: Array<{ src: string | null; alt: string | null }> = [];
   let imageElements: HTMLImageElement[] = [];
 
   let canvasReady = false;
 
-  async function onFilesChange({ detail: fileList }) {
+  async function onFilesChange({ detail: fileList }: { detail: File[] }) {
     imageElements = []; // make canvas not ready while images are loading
-    loadedImages.forEach((img) => URL.revokeObjectURL(img.src));
+    loadedImages.forEach((img) => {
+      if (img?.src != null) {
+        URL.revokeObjectURL(img.src)
+      }
+    });
     loadedImages = fileList.map((file) => ({
       src: file == null ? null : URL.createObjectURL(file),
-      alt: file?.name,
+      alt: file?.name ?? null,
     }));
     imageElements = await Promise.all(
-      loadedImages.map((img) => loadIntoImage(img.src))
+      loadedImages.map((img) => loadIntoImage(img?.src ?? null))
     );
   }
 
-  function loadIntoImage(source: string): Promise<HTMLImageElement> {
+  function loadIntoImage(source: string | null): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
       if (source == null) {
         return Promise.resolve(null);
