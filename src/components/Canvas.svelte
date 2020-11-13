@@ -180,7 +180,9 @@
         line * (triangleBase / 2)
       );
     }
-    dispatch('finish', canvas); // TODO: count how often and only emit last
+    if (line === 3 && index === 5) {
+      dispatch('finish', canvas);
+    }
   }
 </script>
 
