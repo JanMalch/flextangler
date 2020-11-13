@@ -51,20 +51,20 @@
     const link = document.createElement('a');
     link.download = 'flextangle-template.png';
     link.href = canvasComponent.canvas.toDataURL('image/png');
-    link.target = '_blank'
+    link.target = '_blank';
     link.click();
   }
 </script>
 
 <p>
-  The app will then transform your images to fit the flextangle template.
-  Please note that the cutting is based on the largest possible hexagon in
-  the center of each image. To make sure you have the desired outcome, you
-  can upload squared images that are at least 250&times;250px in size.
+  The app will then transform your images to fit the flextangle template. Please
+  note that the cutting is based on the largest possible hexagon in the center
+  of each image. To make sure you have the desired outcome, you can upload
+  squared images that are at least 250&times;250px in size.
 </p>
 <p>
-  Simply select four images with the boxes below. If you
-  select more than one file, they are put into the subsequent boxes.
+  Simply select four images with the boxes below. If you select more than one
+  file, they are put into the subsequent boxes.
 </p>
 
 <section>
@@ -75,27 +75,36 @@
   <p>
     {#if canvasReady}
       <strong>Your template is ready!</strong>
-      {:else}
-      Please select 4 images before continuing.
-      {/if}<br/>
+    {:else}Please select 4 images before continuing.{/if}<br />
     Download the image or verify the outcome in the preview beforehand.
   </p>
 </section>
 <section id="actions">
-  <button class="btn box-shadow" disabled="{!canvasReady}" on:click={downloadAsImage}>Download template</button>
-  <button class="btn box-shadow" disabled="{!canvasReady}" on:click={togglePreview}>{previewVisible ? 'Hide' : 'Show'} preview</button>
+  <button
+    class="btn box-shadow"
+    disabled="{!canvasReady}"
+    on:click="{downloadAsImage}">Download template</button>
+  <button
+    class="btn box-shadow"
+    disabled="{!canvasReady}"
+    on:click="{togglePreview}">{previewVisible ? 'Hide' : 'Show'}
+    preview</button>
 </section>
-<section hidden="{!previewVisible}" bind:this={canvasSection}>
+<section hidden="{!previewVisible}" bind:this="{canvasSection}">
   <Canvas
-    bind:this={canvasComponent}
+    bind:this="{canvasComponent}"
     drawables="{imageElements}"
     triangleHeight="{triangleHeight}"
-    on:finish={onFinish}/>
+    on:finish="{onFinish}" />
 </section>
 <section>
-  <p>Print the template and follow the
-  <a href="https://i.imgur.com/9Fmn6Da.mp4" rel="noopener">cutting and folding instructions</a>.<br/>
-    Lastly make sure you share this website with your family and friends, if you like it.</p>
+  <p>
+    Print the template and follow the
+    <a href="https://i.imgur.com/9Fmn6Da.mp4" rel="noopener">cutting and folding
+      instructions</a>.<br />
+    Lastly make sure you share this website with your family and friends, if you
+    like it.
+  </p>
 </section>
 
 <style>
@@ -104,43 +113,43 @@
   }
 
   #actions {
-      text-align: center;
+    text-align: center;
   }
 
   .btn {
-      text-decoration: none;
-      text-transform: uppercase;
-      font-size: 18px;
-      border-radius: 4px;
-      padding: 16px 32px;
-      margin-right: 16px;
-      border: none;
-      outline: none;
-      font-weight: 500;
-      letter-spacing: 0.5px;
-      background-color: rgb(0,100,200);
-      color: #ffffff;
-      cursor: pointer;
-      transition: background-color 0.22s;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 18px;
+    border-radius: 4px;
+    padding: 16px 32px;
+    margin-right: 16px;
+    border: none;
+    outline: none;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    background-color: rgb(0, 100, 200);
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.22s;
   }
 
   .btn:hover {
-      background-color: hsl(210, 100%, 30%);
+    background-color: hsl(210, 100%, 30%);
   }
 
   .btn + .btn {
-      color: rgb(0,100,200);
-      background-color: #ffffff;
+    color: rgb(0, 100, 200);
+    background-color: #ffffff;
   }
 
   .btn + .btn:hover {
-      background-color: #f3f3f3;
+    background-color: #f3f3f3;
   }
 
   .btn:disabled:hover,
   .btn:disabled {
-      background-color: #cccccc;
-      color: #aaaaaa;
-      cursor: not-allowed;
+    background-color: #cccccc;
+    color: #aaaaaa;
+    cursor: not-allowed;
   }
 </style>

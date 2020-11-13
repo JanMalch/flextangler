@@ -170,11 +170,11 @@
         line * (triangleBase / 2)
       );
     }
-    dispatch('finish', canvas) // TODO: count how often and only emit last
+    dispatch('finish', canvas); // TODO: count how often and only emit last
   }
 </script>
 
-<svelte:options accessors/>
+<svelte:options accessors />
 
 <div aria-hidden="true" hidden>
   {#each allTriangleSetups as triangleSetups, line}
