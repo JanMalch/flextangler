@@ -2,10 +2,11 @@
   import { afterUpdate, createEventDispatcher } from 'svelte';
   import { drawImage, inClip } from '../drawing/utils';
   import { ORIGIN } from '../factories';
-  import { magicWidth } from '../formulas/content';
+  import { magicHeight } from '../formulas/content';
   import type { InputValues, ProcessingOptions, TriangleDef } from '../types';
 
-  export let options: ProcessingOptions;
+  export let rotation: ProcessingOptions['rotation'];
+  export let relativeRectangle: ProcessingOptions['relativeRectangle'];
 
   export let image: HTMLImageElement;
   export let inputValues: InputValues;
@@ -19,14 +20,7 @@
 
   let toTriangleCanvas: HTMLCanvasElement; //  | null = null;
   let rotatedTriangleCanvas: HTMLCanvasElement; //  | null = null;
-  let fullRotatedTriangleCanvas: HTMLCanvasElement; //  | null = null;
   let scaledRotatedTriangleCanvas: HTMLCanvasElement; //  | null = null;
-
-  $: secondCanvasDimensions =
-    options?.secondCanvasDimensions ??
-    (((width, height) => ({ width, height })) as NonNullable<
-      ProcessingOptions['secondCanvasDimensions']
-    >);
 
   const dispatch = createEventDispatcher();
 
@@ -57,10 +51,10 @@
             height: toTriangleCanvas.height,
           },
           {
-            x: options.relativeRectangle.x * image.naturalWidth,
-            y: options.relativeRectangle.y * image.naturalHeight,
-            width: options.relativeRectangle.width * image.naturalWidth,
-            height: options.relativeRectangle.height * image.naturalHeight,
+            x: relativeRectangle.x * image.naturalWidth,
+            y: relativeRectangle.y * image.naturalHeight,
+            width: relativeRectangle.width * image.naturalWidth,
+            height: relativeRectangle.height * image.naturalHeight,
           }
         );
       }
@@ -72,22 +66,7 @@
   function loadIntoRotatedCanvas() {
     const ctx = rotatedTriangleCanvas!.getContext('2d')!;
     ctx.save();
-    if (options.rotation) {
-      options.rotation(rotatedTriangleCanvas, toTriangleCanvas);
-    } else {
-      ctx.drawImage(toTriangleCanvas, 0, 0);
-    }
-    ctx.restore();
-  }
-
-  function loadIntoFullRotatedCanvas() {
-    const ctx = fullRotatedTriangleCanvas!.getContext('2d')!;
-    ctx.save();
-    if (options.secondRotation) {
-      options.secondRotation(fullRotatedTriangleCanvas, rotatedTriangleCanvas);
-    } else {
-      ctx.drawImage(rotatedTriangleCanvas, 0, 0);
-    }
+    rotation(rotatedTriangleCanvas, toTriangleCanvas);
     ctx.restore();
   }
 
@@ -97,7 +76,7 @@
     drawImage(
       ctx,
       ORIGIN,
-      fullRotatedTriangleCanvas,
+      rotatedTriangleCanvas,
       {
         x: 0,
         y: 0,
@@ -108,8 +87,8 @@
       {
         x: 0,
         y: 0,
-        width: fullRotatedTriangleCanvas.width,
-        height: fullRotatedTriangleCanvas.height,
+        width: rotatedTriangleCanvas.width,
+        height: rotatedTriangleCanvas.height,
       }
     );
     ctx.restore();
@@ -118,7 +97,6 @@
   function redraw() {
     loadIntoTriangleCanvas();
     loadIntoRotatedCanvas();
-    loadIntoFullRotatedCanvas();
     loadIntoScaledCanvas();
     dispatch('finish', scaledRotatedTriangleCanvas);
   }
@@ -131,8 +109,8 @@
       {toTriangleCanvas?.height.toFixed(2)})</b>
     <canvas
       bind:this="{toTriangleCanvas}"
-      height="{inputValues.triangleHeight}"
-      width="{inputValues.triangleBase * (magicWidth * 2)}"></canvas>
+      height="{inputValues.triangleHeight * (magicHeight * 2)}"
+      width="{inputValues.triangleBase}"></canvas>
   </div>
   <div>
     <b>rotatedTriangleCanvas ({rotatedTriangleCanvas?.width.toFixed(2)}
@@ -140,17 +118,8 @@
       {rotatedTriangleCanvas?.height.toFixed(2)})</b>
     <canvas
       bind:this="{rotatedTriangleCanvas}"
-      height="{secondCanvasDimensions(inputValues.triangleBase * (magicWidth * 2), inputValues.triangleHeight).height}"
-      width="{secondCanvasDimensions(inputValues.triangleBase * (magicWidth * 2), inputValues.triangleHeight).width}"></canvas>
-  </div>
-  <div>
-    <b>fullRotatedTriangleCanvas ({fullRotatedTriangleCanvas?.width.toFixed(2)}
-      &times;
-      {fullRotatedTriangleCanvas?.height.toFixed(2)})</b>
-    <canvas
-      bind:this="{fullRotatedTriangleCanvas}"
-      height="{inputValues.triangleHeight}"
-      width="{inputValues.triangleBase * (magicWidth * 2)}"></canvas>
+      height="{inputValues.triangleBase}"
+      width="{inputValues.triangleHeight * (magicHeight * 2)}"></canvas>
   </div>
   <div>
     <b>scaledRotatedTriangleCanvas ({scaledRotatedTriangleCanvas?.width.toFixed(2)}
@@ -158,8 +127,8 @@
       {scaledRotatedTriangleCanvas?.height.toFixed(2)})</b>
     <canvas
       bind:this="{scaledRotatedTriangleCanvas}"
-      height="{inputValues.triangleHeight}"
-      width="{inputValues.triangleBase * (magicWidth * 2) * scalingFactor}"></canvas>
+      height="{inputValues.triangleBase}"
+      width="{inputValues.triangleHeight * (magicHeight * 2) * scalingFactor}"></canvas>
   </div>
 </section>
 

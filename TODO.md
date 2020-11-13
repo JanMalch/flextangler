@@ -6,7 +6,8 @@
   - [x] open twice in Chrome
   - [x] multiple files don't work in Firefox
 - [x] remove unused code
-- [ ] rotate the underlying hexagon, so the result has a flat side on the bottom
+- [x] rotate the underlying hexagon, so the result has a flat side on the bottom
 - [x] improve typing
 - [x] use strict TypeScript mode
 - [x] fix mobile layout
+- [ ] offscreen / in mem canvas?

@@ -48,11 +48,6 @@ export interface NaturalImage {
 }
 
 export interface ProcessingOptions {
-  rotation?: (canvas: HTMLCanvasElement, prev: HTMLCanvasElement) => void;
-  secondRotation?: (canvas: HTMLCanvasElement, prev: HTMLCanvasElement) => void;
-  secondCanvasDimensions?: (
-    defaultWidth: number,
-    defaultHeight: number
-  ) => RectangleDef;
+  rotation: (canvas: HTMLCanvasElement, prev: HTMLCanvasElement) => void;
   relativeRectangle: Rectangle;
 }

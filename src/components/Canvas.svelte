@@ -2,9 +2,9 @@
   import { createEventDispatcher } from 'svelte';
   import { checks, isDefined } from 'ts-code-contracts';
   import { drawGlue } from '../drawing/glue';
-  import { magicScale, magicWidth } from '../formulas/content';
+  import { magicScale, magicHeight } from '../formulas/content';
   import { degreeToRadian } from '../formulas/math';
-  import { leftwardTriangle, rightwardTriangle } from '../shapes';
+  import { upwardTriangle, downwardTriangle } from '../shapes';
   import type { ProcessingOptions } from '../types';
   import TriangleProcessing from './TriangleProcessing.svelte';
 
@@ -25,115 +25,94 @@
       drawGlue(ctx, inputValues, glueWidth);
     }
   }
-
   const lookup: ProcessingOptions[] = [
     {
+      // A0
       relativeRectangle: {
-        x: 0.5 - magicWidth,
-        y: 0,
-        width: magicWidth,
-        height: 0.5,
+        x: 0,
+        y: 0.5,
+        width: 0.5,
+        height: magicHeight,
       },
-    },
-    {
-      relativeRectangle: {
-        x: 0.5,
-        y: 0,
-        width: magicWidth,
-        height: 0.5,
-      },
-    },
-    {
       rotation: (canvas, prev) => {
         const ctx = canvas.getContext('2d')!;
-        ctx.rotate(degreeToRadian(-90));
-        ctx.drawImage(prev, prev.width * -1, 0);
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        ctx.rotate(degreeToRadian(90));
+        ctx.drawImage(prev, prev.width / -2, prev.height / -2);
       },
-      secondRotation: (canvas, prev) => {
+    },
+    {
+      // A1
+      relativeRectangle: {
+        x: 0,
+        y: 0.5 - magicHeight,
+        width: 0.5,
+        height: magicHeight,
+      },
+      rotation: (canvas, prev) => {
+        const ctx = canvas.getContext('2d')!;
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        ctx.rotate(degreeToRadian(90));
+        ctx.drawImage(prev, prev.width / -2, prev.height / -2);
+      },
+    },
+    {
+      // A2
+      rotation: (canvas, prev) => {
+        const ctx = canvas.getContext('2d')!;
+        ctx.translate(0, prev.width / 2);
+        ctx.rotate(degreeToRadian(-30));
+        ctx.drawImage(prev, 0, 0);
+      },
+      relativeRectangle: {
+        x: 0.25,
+        y: 0.5 - magicHeight,
+        width: 0.5,
+        height: magicHeight,
+      },
+    },
+    {
+      // A3
+      rotation: (canvas, prev) => {
+        const ctx = canvas.getContext('2d')!;
+        ctx.rotate(degreeToRadian(-30));
+        ctx.drawImage(prev, prev.width / -2, 0);
+      },
+      relativeRectangle: {
+        x: 0.5,
+        y: 0.5 - magicHeight,
+        width: 0.5,
+        height: magicHeight,
+      },
+    },
+    {
+      // A4
+      rotation: (canvas, prev) => {
         const ctx = canvas.getContext('2d')!;
         ctx.translate(0, canvas.height / 2);
-        ctx.rotate(degreeToRadian(-30));
-        ctx.drawImage(prev, 0, 0);
+        ctx.rotate(degreeToRadian(-150));
+        ctx.drawImage(prev, canvas.height * -1, 0);
       },
-      secondCanvasDimensions: (defaultWidth, defaultHeight) => ({
-        height: defaultWidth,
-        width: defaultHeight,
-      }),
-      relativeRectangle: {
-        x: 0.5,
-        y: 0.25,
-        width: magicWidth,
-        height: 0.5,
-      },
-    },
-    {
-      rotation: (canvas, prev) => {
-        const ctx = canvas.getContext('2d')!;
-        ctx.rotate(degreeToRadian(-30));
-        ctx.drawImage(prev, 0, 0);
-      },
-      secondRotation: (canvas, prev) => {
-        const ctx = canvas.getContext('2d')!;
-        ctx.rotate(degreeToRadian(-90));
-        ctx.drawImage(prev, -1 * inputValues.triangleBase, 0);
-      },
-      secondCanvasDimensions: (defaultWidth, defaultHeight) => ({
-        height: defaultWidth,
-        width: defaultHeight,
-      }),
       relativeRectangle: {
         x: 0.5,
         y: 0.5,
-        width: magicWidth,
-        height: 0.5,
+        width: 0.5,
+        height: magicHeight,
       },
     },
     {
+      // A5
       rotation: (canvas, prev) => {
         const ctx = canvas.getContext('2d')!;
-        ctx.rotate(degreeToRadian(90));
+        ctx.translate(canvas.width, canvas.height / 2);
+        ctx.rotate(degreeToRadian(-150));
         ctx.drawImage(prev, 0, canvas.width * -1);
       },
-      secondRotation: (canvas, prev) => {
-        const ctx = canvas.getContext('2d')!;
-        ctx.translate(canvas.width, canvas.height);
-        ctx.rotate(degreeToRadian(30));
-        ctx.drawImage(prev, -1 * canvas.height, -1 * canvas.width);
-      },
-      secondCanvasDimensions: (defaultWidth, defaultHeight) => ({
-        height: defaultWidth,
-        width: defaultHeight,
-      }),
       relativeRectangle: {
-        x: 0.5 - magicWidth,
+        x: 0.25,
         y: 0.5,
-        width: magicWidth,
-        height: 0.5,
-      },
-    },
-    {
-      rotation: (canvas, prev) => {
-        const ctx = canvas.getContext('2d')!;
-        ctx.translate(canvas.width, 0);
-        ctx.rotate(degreeToRadian(90));
-        ctx.drawImage(prev, 0, 0);
-      },
-      secondRotation: (canvas, prev) => {
-        const ctx = canvas.getContext('2d')!;
-        ctx.rotate(degreeToRadian(30));
-        ctx.drawImage(prev, 0, 0);
-      },
-      secondCanvasDimensions: (defaultWidth, defaultHeight) => {
-        return {
-          height: defaultWidth,
-          width: defaultHeight,
-        };
-      },
-      relativeRectangle: {
-        x: 0.5 - magicWidth,
-        y: 0.25,
-        width: magicWidth,
-        height: 0.5,
+        width: 0.5,
+        height: magicHeight,
       },
     },
   ];
@@ -146,8 +125,7 @@
           .map((_, i) => {
             return {
               image: drawable,
-              clippingTriangle:
-                i % 2 === 1 ? rightwardTriangle : leftwardTriangle,
+              clippingTriangle: i % 2 === 0 ? downwardTriangle : upwardTriangle,
               ...lookup[i],
             };
           })
@@ -193,9 +171,7 @@
     {#each triangleSetups as setup, i}
       <strong>A{i}</strong>
       <TriangleProcessing
-        options="{setup}"
-        image="{setup.image}"
-        clippingTriangle="{setup.clippingTriangle}"
+        {...setup}
         inputValues="{inputValues}"
         scalingFactor="{magicScale}"
         on:finish="{(ev) => onProcessingFinish(ev, line, i)}" />
