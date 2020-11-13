@@ -7,8 +7,6 @@
   let triangleHeight = 200;
 
   let previewVisible = false;
-  const created = '__TIMESTAMP__'; // replaced by rollup
-  const version = '__VERSION__'; // replaced by rollup
 
   let loadedImages: Array<{ src: string; alt: string }> = [];
   let imageElements: HTMLImageElement[] = [];
@@ -58,144 +56,51 @@
   }
 </script>
 
-<svelte:head>
-  <meta name="dc.created" content="{created}" />
-  <meta name="version" content="{version}" />
-</svelte:head>
-
-<div class="content">
-  <header class="container">
-    <h1>Flextangler <small>beta</small></h1>
-    <p>
-      <strong>Flextangler</strong>
-      is a web app that helps you create flextangles with your own images.
-      <strong>None of your files are sent to a server! All processing is done in
-        your browser.</strong>
-      In fact, you can use this website completely offline.
-    </p>
-    <p>
-      The app will then transform your images to fit the flextangle template.
-      Please note that the cutting is based on the largest possible hexagon in
-      the center of each image. To make sure you have the desired outcome, you
-      can upload squared images that are at least 250&times;250px in size.
-    </p>
-    <p>
-      Simply select four images with the boxes below. If you
-      select more than one file, they are put into the subsequent boxes.
-    </p>
-  </header>
-
-  <main class="container">
-    <section>
-      <FileInputs images="{loadedImages}" on:filesChange="{onFilesChange}" />
-    </section>
+<p>
+  The app will then transform your images to fit the flextangle template.
+  Please note that the cutting is based on the largest possible hexagon in
+  the center of each image. To make sure you have the desired outcome, you
+  can upload squared images that are at least 250&times;250px in size.
+</p>
+<p>
+  Simply select four images with the boxes below. If you
+  select more than one file, they are put into the subsequent boxes.
+</p>
 
 <section>
-      <p>
-        {#if canvasReady}
-          <strong>Your template is ready!</strong>
-          {:else}
-          Please select 4 images before continuing.
-          {/if}<br/>
-        Download the image or verify the outcome in the preview beforehand.
-      </p>
-    </section>
-    <section id="actions">
-      <button class="btn box-shadow" disabled="{!canvasReady}" on:click={downloadAsImage}>Download template</button>
-      <button class="btn box-shadow" disabled="{!canvasReady}" on:click={togglePreview}>{previewVisible ? 'Hide' : 'Show'} preview</button>
-    </section>
-    <section hidden="{!previewVisible}" bind:this={canvasSection}>
-      <Canvas
-        bind:this={canvasComponent}
-        drawables="{imageElements}"
-        triangleHeight="{triangleHeight}"
-        on:finish={onFinish}/>
-    </section>
-    <section>
-      <p>Print the template and follow the
-      <a href="https://i.imgur.com/9Fmn6Da.mp4" rel="noopener">cutting and folding instructions</a>.<br/>
-        Lastly make sure you share this website with your family and friends, if you like it.</p>
-    </section>
-  </main>
-  <footer class="container">
-    Created by
-    <a href="https://github.com/JanMalch" rel="noopener">JanMalch 👨🏻‍💻</a>
-    and Lorenz 🧠 &bullet;
-    <a href="https://github.com/JanMalch/flextangler" rel="noopener">Source Code</a>
-    &bullet;
-    <a
-      href="https://github.com/JanMalch/flextangler/blob/master/CHANGELOG.md"
-      rel="noopener">v{version}</a>
-    &bullet; &copy; JanMalch,
-    {new Date().getFullYear()}
-  </footer>
-</div>
+  <FileInputs images="{loadedImages}" on:filesChange="{onFilesChange}" />
+</section>
+
+<section>
+  <p>
+    {#if canvasReady}
+      <strong>Your template is ready!</strong>
+      {:else}
+      Please select 4 images before continuing.
+      {/if}<br/>
+    Download the image or verify the outcome in the preview beforehand.
+  </p>
+</section>
+<section id="actions">
+  <button class="btn box-shadow" disabled="{!canvasReady}" on:click={downloadAsImage}>Download template</button>
+  <button class="btn box-shadow" disabled="{!canvasReady}" on:click={togglePreview}>{previewVisible ? 'Hide' : 'Show'} preview</button>
+</section>
+<section hidden="{!previewVisible}" bind:this={canvasSection}>
+  <Canvas
+    bind:this={canvasComponent}
+    drawables="{imageElements}"
+    triangleHeight="{triangleHeight}"
+    on:finish={onFinish}/>
+</section>
+<section>
+  <p>Print the template and follow the
+  <a href="https://i.imgur.com/9Fmn6Da.mp4" rel="noopener">cutting and folding instructions</a>.<br/>
+    Lastly make sure you share this website with your family and friends, if you like it.</p>
+</section>
 
 <style>
-  .content {
-    display: grid;
-    grid-template-columns: auto;
-    grid-template-rows: auto 1fr auto;
-    height: 100%;
-  }
-
-  h1 {
-    display: flex;
-    align-items: baseline;
-    justify-content: center;
-  }
-
-  h1 > small {
-    font-size: 10px;
-    text-transform: uppercase;
-    opacity: 0.6;
-  }
-
-  header,
-  footer,
-  p {
-    text-align: center;
-  }
-
-  p {
-    width: 84ch;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 18px;
-    line-height: 1.65;
-  }
-
-  header > p:last-child {
-    margin-bottom: 0;
-  }
-
-  p > a {
-    font-weight: 500;
-  }
-
-  main > section {
+  section {
     margin: 64px 0;
-  }
-
-  details {
-      text-align: center; /* center canvas */
-  }
-
-  details > summary {
-      list-style-type: none;
-      outline: none;
-  }
-
-  details > summary strong {
-      cursor: pointer;
-  }
-
-  details > summary strong:hover {
-      text-decoration: underline;
-  }
-
-  details summary::-webkit-details-marker {
-      display:none;
   }
 
   #actions {
@@ -237,11 +142,5 @@
       background-color: #cccccc;
       color: #aaaaaa;
       cursor: not-allowed;
-  }
-
-  footer {
-    padding: 32px 0;
-    opacity: 0.9;
-    font-size: 0.9em;
   }
 </style>

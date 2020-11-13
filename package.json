@@ -20,7 +20,6 @@
     "@commitlint/config-conventional": "^11.0.0",
     "@rollup/plugin-commonjs": "^14.0.0",
     "@rollup/plugin-node-resolve": "^8.0.0",
-    "@rollup/plugin-replace": "^2.3.4",
     "@rollup/plugin-typescript": "^6.0.0",
     "@tsconfig/svelte": "^1.0.0",
     "@types/jest": "^26.0.15",
@@ -66,6 +65,18 @@
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-push": "npm run build && npm test"
     }
+  },
+  "standard-version": {
+    "bumpFiles": [
+      {
+        "filename": "package.json",
+        "type": "json"
+      },
+      {
+        "filename": "public/index.html",
+        "updater": "version-in-html.js"
+      }
+    ]
   },
   "repository": {
     "type": "git",

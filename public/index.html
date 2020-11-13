@@ -1,21 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset='utf-8'>
-	<meta name='viewport' content='width=device-width,initial-scale=1'>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+		<meta name="version" content="0.0.2" />
 
-	<title>Flextangler</title>
+    <link rel="schema.dc" href="http://purl.org/dc/elements/1.1/" />
+    <meta name="dc.created" content="2020-11-13T00:00:00.000Z" />
 
-	<link rel='icon' type='image/png' href='favicon.png'>
-	<link rel='stylesheet' href='global.css'>
-	<link rel='stylesheet' href='build/bundle.css'>
+    <title>Flextangler</title>
 
-	<script defer src='build/bundle.js'></script>
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="global.css" />
+    <link rel="stylesheet" href="build/bundle.css" />
 
-	<link rel="schema.dc" href="http://purl.org/dc/elements/1.1/" />
-</head>
+    <script defer src="build/bundle.js"></script>
+  </head>
 
-<body>
-<noscript>Unfortunately <strong>Flextangler</strong> does not work without JavaScript.</noscript>
-</body>
+  <body>
+    <header class="container">
+      <h1>Flextangler <small>beta</small></h1>
+      <p>
+        <strong>Flextangler</strong>
+        is a web app that helps you create flextangles with your own images.
+        <strong
+          >None of your files are sent to a server! All processing is done in
+          your browser.</strong
+        >
+        In fact, you can use this website completely offline.
+      </p>
+      <noscript>
+        <p>
+          Unfortunately that means <strong>Flextangler</strong> cannot work without
+          JavaScript. Please enable it in your browser settings.
+        </p>
+      </noscript>
+    </header>
+    <main class="container"></main>
+    <footer class="container">
+      Created by
+      <a href="https://github.com/JanMalch" rel="noopener">JanMalch 👨🏻‍💻</a>
+      and Lorenz 🧠 &bullet;
+      <a href="https://github.com/JanMalch/flextangler" rel="noopener"
+        >Source Code</a
+      >
+      &bullet;
+      <a
+        href="https://github.com/JanMalch/flextangler/blob/master/CHANGELOG.md"
+        rel="noopener"
+        >v0.0.2</a
+      >
+      &bullet; &copy; JanMalch, 2020
+    </footer>
+  </body>
 </html>
