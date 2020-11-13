@@ -46,6 +46,7 @@
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+      flex-wrap: wrap;
   }
 
   div {
@@ -104,5 +105,11 @@
     z-index: -1;
     top: -9999px;
     left: -9999px;
+  }
+
+  @media (max-width: 599px) {
+      div {
+          margin: 1em;
+      }
   }
 </style>

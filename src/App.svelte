@@ -152,4 +152,16 @@
     color: #aaaaaa;
     cursor: not-allowed;
   }
+
+  @media (max-width: 599px) {
+      section {
+          margin: 32px 0;
+      }
+
+      .btn {
+          display: block;
+          width: 80%;
+          margin: 16px auto;
+      }
+  }
 </style>
