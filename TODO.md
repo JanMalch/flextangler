@@ -10,4 +10,4 @@
 - [x] improve typing
 - [x] use strict TypeScript mode
 - [x] fix mobile layout
-- [ ] offscreen / in mem canvas?
+- [x] in mem canvas

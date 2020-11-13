@@ -2,7 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import { checks, isDefined } from 'ts-code-contracts';
   import { drawGlue } from '../drawing/glue';
-  import { magicScale, magicHeight } from '../formulas/content';
+  import { magicHeight } from '../formulas/content';
   import { degreeToRadian } from '../formulas/math';
   import { upwardTriangle, downwardTriangle } from '../shapes';
   import type { ProcessingOptions } from '../types';
@@ -169,11 +169,9 @@
 <div aria-hidden="true" hidden>
   {#each allTriangleSetups as triangleSetups, line}
     {#each triangleSetups as setup, i}
-      <strong>A{i}</strong>
       <TriangleProcessing
         {...setup}
         inputValues="{inputValues}"
-        scalingFactor="{magicScale}"
         on:finish="{(ev) => onProcessingFinish(ev, line, i)}" />
     {/each}
   {/each}

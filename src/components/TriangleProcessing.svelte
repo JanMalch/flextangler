@@ -3,14 +3,18 @@
   import { drawImage, inClip } from '../drawing/utils';
   import { ORIGIN } from '../factories';
   import { magicHeight } from '../formulas/content';
-  import type { InputValues, ProcessingOptions, TriangleDef } from '../types';
+  import type {
+    InputValues,
+    ProcessingOptions,
+    RectangleDef,
+    TriangleDef,
+  } from '../types';
 
   export let rotation: ProcessingOptions['rotation'];
   export let relativeRectangle: ProcessingOptions['relativeRectangle'];
 
   export let image: HTMLImageElement;
   export let inputValues: InputValues;
-  export let scalingFactor: number;
   export let clippingTriangle: TriangleDef;
 
   /**
@@ -18,16 +22,12 @@
    */
   let showLines = false;
 
-  let toTriangleCanvas: HTMLCanvasElement; //  | null = null;
-  let rotatedTriangleCanvas: HTMLCanvasElement; //  | null = null;
-  let scaledRotatedTriangleCanvas: HTMLCanvasElement; //  | null = null;
-
   const dispatch = createEventDispatcher();
 
   afterUpdate(() => redraw());
 
-  function loadIntoTriangleCanvas() {
-    const ctx = toTriangleCanvas!.getContext('2d')!;
+  function loadIntoTriangleCanvas(toTriangleCanvas: HTMLCanvasElement) {
+    const ctx = toTriangleCanvas.getContext('2d')!;
     ctx.clearRect(0, 0, toTriangleCanvas.width, toTriangleCanvas.height);
     ctx.save();
 
@@ -63,15 +63,21 @@
     ctx.restore();
   }
 
-  function loadIntoRotatedCanvas() {
-    const ctx = rotatedTriangleCanvas!.getContext('2d')!;
+  function loadIntoRotatedCanvas(
+    toTriangleCanvas: HTMLCanvasElement,
+    rotatedTriangleCanvas: HTMLCanvasElement
+  ) {
+    const ctx = rotatedTriangleCanvas.getContext('2d')!;
     ctx.save();
     rotation(rotatedTriangleCanvas, toTriangleCanvas);
     ctx.restore();
   }
 
-  function loadIntoScaledCanvas() {
-    const ctx = scaledRotatedTriangleCanvas!.getContext('2d')!;
+  function loadIntoScaledCanvas(
+    rotatedTriangleCanvas: HTMLCanvasElement,
+    scaledRotatedTriangleCanvas: HTMLCanvasElement
+  ) {
+    const ctx = scaledRotatedTriangleCanvas.getContext('2d')!;
     ctx.save();
     drawImage(
       ctx,
@@ -94,58 +100,30 @@
     ctx.restore();
   }
 
+  function createCanvas(dimensions: RectangleDef): HTMLCanvasElement {
+    const canvas = document.createElement('canvas');
+    canvas.width = dimensions.width;
+    canvas.height = dimensions.height;
+    return canvas;
+  }
+
   function redraw() {
-    loadIntoTriangleCanvas();
-    loadIntoRotatedCanvas();
-    loadIntoScaledCanvas();
+    const toTriangleCanvas = createCanvas({
+      width: inputValues.triangleBase,
+      height: inputValues.triangleHeight * (magicHeight * 2),
+    });
+    const rotatedTriangleCanvas = createCanvas({
+      height: inputValues.triangleBase,
+      width: inputValues.triangleHeight * (magicHeight * 2),
+    });
+    const scaledRotatedTriangleCanvas = createCanvas({
+      width: inputValues.triangleBase,
+      height: inputValues.triangleHeight,
+    });
+
+    loadIntoTriangleCanvas(toTriangleCanvas);
+    loadIntoRotatedCanvas(toTriangleCanvas, rotatedTriangleCanvas);
+    loadIntoScaledCanvas(rotatedTriangleCanvas, scaledRotatedTriangleCanvas);
     dispatch('finish', scaledRotatedTriangleCanvas);
   }
 </script>
-
-<section>
-  <div>
-    <b>toTriangleCanvas ({toTriangleCanvas?.width.toFixed(2)}
-      &times;
-      {toTriangleCanvas?.height.toFixed(2)})</b>
-    <canvas
-      bind:this="{toTriangleCanvas}"
-      height="{inputValues.triangleHeight * (magicHeight * 2)}"
-      width="{inputValues.triangleBase}"></canvas>
-  </div>
-  <div>
-    <b>rotatedTriangleCanvas ({rotatedTriangleCanvas?.width.toFixed(2)}
-      &times;
-      {rotatedTriangleCanvas?.height.toFixed(2)})</b>
-    <canvas
-      bind:this="{rotatedTriangleCanvas}"
-      height="{inputValues.triangleBase}"
-      width="{inputValues.triangleHeight * (magicHeight * 2)}"></canvas>
-  </div>
-  <div>
-    <b>scaledRotatedTriangleCanvas ({scaledRotatedTriangleCanvas?.width.toFixed(2)}
-      &times;
-      {scaledRotatedTriangleCanvas?.height.toFixed(2)})</b>
-    <canvas
-      bind:this="{scaledRotatedTriangleCanvas}"
-      height="{inputValues.triangleBase}"
-      width="{inputValues.triangleHeight * (magicHeight * 2) * scalingFactor}"></canvas>
-  </div>
-</section>
-
-<style>
-  section {
-    display: grid;
-    grid-gap: 16px;
-    grid-template-columns: repeat(4, 1fr);
-    margin-bottom: 32px;
-  }
-
-  b {
-    display: block;
-  }
-
-  canvas {
-    border: 1px solid #444;
-    background-color: #eeeeee;
-  }
-</style>
