@@ -1,25 +1,6 @@
 import {
   degreeToRadian,
-  legOfIsoscelesTriangle,
-  pythagorean,
 } from '../../src/formulas/math';
-
-describe('pythagorean', () => {
-  it('should compute correctly', () => {
-    expect(pythagorean(3, 4)).toBe(5);
-  });
-});
-
-describe('legOfIsoscelesTriangle', () => {
-  it('should compute correctly', () => {
-    expect(
-      legOfIsoscelesTriangle({
-        base: 6,
-        height: 4,
-      })
-    ).toBe(5);
-  });
-});
 
 describe('degreeToRadian', () => {
   it('should compute correctly', () => {

@@ -1,6 +1,6 @@
 import { p } from '../../src/factories';
 import { scale, scaleTriangle } from '../../src/formulas/util';
-import { InputValues } from '../../src/types';
+import type { InputValues } from '../../src/types';
 
 describe('scale', () => {
   const values: InputValues = { triangleBase: 2, triangleHeight: 2 };
