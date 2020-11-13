@@ -1,5 +1,6 @@
 import { ORIGIN, p } from '../factories';
 import { glueSideParts, glueTopParts } from '../formulas/glue';
+import { degreeToRadian } from '../formulas/math';
 import type { InputValues, Point, Triangle } from '../types';
 import { moveAlongPath, movePointlike } from './utils';
 
@@ -18,7 +19,7 @@ export function drawGlueArea(
   triangle: Triangle,
   textPoint: Point,
   textBaseline: CanvasTextBaseline,
-  beforeFillText: () => void
+  beforeFillText?: () => void
 ): void {
   ctx.save();
 
@@ -51,7 +52,8 @@ export function drawGlueArea(
 
 export function drawGlue(
   ctx: CanvasRenderingContext2D,
-  inputValues: InputValues
+  inputValues: InputValues,
+  glueWidth: number
 ) {
   const topParts = glueTopParts(inputValues);
   const sideParts = glueSideParts(inputValues);
@@ -62,8 +64,7 @@ export function drawGlue(
       ORIGIN,
       topPart,
       p(topPart.x + topPart.points[1].x, (topPart.y + topPart.points[1].y) / 2),
-      'bottom',
-      () => {}
+      'bottom'
     );
   }
 
@@ -74,13 +75,10 @@ export function drawGlue(
       sidePart,
       p(
         sidePart.x + sidePart.points[1].x,
-        (sidePart.y + sidePart.points[1].y) / 2
+        sidePart.y + (sidePart.points[1].y / 2)
       ),
       'middle',
-      () => {
-        // ctx.translate(sidePart.x, sidePart.y + triangleBase / 2);
-        // ctx.rotate(-Math.PI / 2);
-      }
+      () => ctx.translate(glueWidth / 2, 0)
     );
   }
 }

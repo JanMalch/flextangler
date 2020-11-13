@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
+  import { drawGlue } from '../drawing/glue';
   import { magicScale, magicWidth } from '../formulas/content';
   import { degreeToRadian } from '../formulas/math';
   import { leftwardTriangle, rightwardTriangle } from '../shapes';
@@ -16,6 +17,12 @@
   $: triangleBase = triangleHeight;
   $: inputValues = { triangleBase, triangleHeight };
   $: glueWidth = Math.ceil(triangleHeight * 0.4);
+
+  $: {
+    if (ctx != null) {
+      drawGlue(ctx, inputValues, glueWidth);
+    }
+  }
 
   const lookup = [
     {
