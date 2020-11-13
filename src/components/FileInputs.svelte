@@ -5,33 +5,32 @@
 
   const dispatch = createEventDispatcher();
 
-  let inputs: HTMLInputElement[] = Array(4).fill(null);
+  let files: Array<File | null> = Array(4).fill(null);
 
-  function onInputChange(_: Event, index: number) {
-    const originalFiles = inputs[index].files!;
-    const bound = Math.min(4, index + originalFiles.length);
-    for (let i = index; i < bound; i++) {
-      const list = new DataTransfer();
-      list.items.add(originalFiles.item(i - index)!);
-      inputs[i].files = list.files;
-    }
-
-    const files = inputs.map((input) => input.files!.item(0));
+  function onInputChange(event: Event, index: number) {
+    const selectedFiles = Array.from((event.target as HTMLInputElement).files!);
+    files = Array(4)
+      .fill(null)
+      .map((_, i) => {
+        if (i < index || i >= index + selectedFiles.length) {
+          return files[i];
+        }
+        return selectedFiles[i - index];
+      });
     dispatch('filesChange', files);
   }
 </script>
 
 <form>
-  {#each inputs as _, i}
+  {#each { length: 4 } as _, i}
     <div class="box-shadow">
-      {#if images[i] != null}
+      {#if images[i]?.src != null}
         <img src="{images[i].src ?? undefined}" alt="{images[i].alt}}" />
       {/if}
       <label for="file-{i}">
-        {images[i] == null ? `Select one ${i !== 3 ? 'or more' : ''} image${i === 3 ? '' : 's'}.` : 'Swap image.'}
+        {images[i]?.src == null ? `Select one ${i !== 3 ? 'or more' : ''} image${i === 3 ? '' : 's'}.` : 'Swap image.'}
       </label>
       <input
-        bind:this="{inputs[i]}"
         id="file-{i}"
         type="file"
         accept="image/*"
