@@ -2,11 +2,14 @@
   import { createEventDispatcher } from 'svelte';
   import { drawGlue } from '../drawing/glue';
   import { foldingLines, setSupportingLineStyle } from '../drawing/lines';
-  import { magicAngle, magicHeight } from '../formulas/content';
+  import {
+    extractRotatedTriangle,
+    triangleSelectors,
+  } from '../drawing/processing';
+  import { magicAngle } from '../formulas/content';
   import { degreeToRadian } from '../formulas/math';
-  import { upwardTriangle, downwardTriangle } from '../shapes';
-  import type { Point, ProcessingOptions } from '../types';
-  import TriangleProcessing from './TriangleProcessing.svelte';
+  import { downwardTriangle, upwardTriangle } from '../shapes';
+  import type { Point } from '../types';
 
   export let drawables: HTMLImageElement[] = [];
   export let triangleHeight: number;
@@ -23,123 +26,53 @@
   $: glueWidth = Math.ceil(triangleHeight * 0.4);
 
   $: {
-    if (ctx != null) {
-      // TODO: clear rect & streamline rendering on changes
+    if (
+      canvas != null &&
+      ctx != null &&
+      drawables.length === 4 &&
+      drawables.every((d) => d instanceof HTMLImageElement)
+    ) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
       drawGlue(ctx, inputValues, glueWidth);
-      if (drawCuttingLines) {
-        doDrawCuttingLines();
-      }
-      if (drawFoldingLines) {
-        doDrawFoldingLines();
-      }
-    }
-  }
 
-  const lookup: ProcessingOptions[] = [
-    {
-      // A0
-      relativeRectangle: {
-        x: 0,
-        y: 0.5,
-        width: 0.5,
-        height: magicHeight,
-      },
-      rotation: (canvas, prev) => {
-        const ctx = canvas.getContext('2d')!;
-        ctx.translate(canvas.width / 2, canvas.height / 2);
-        ctx.rotate(degreeToRadian(90));
-        ctx.drawImage(prev, prev.width / -2, prev.height / -2);
-      },
-    },
-    {
-      // A1
-      relativeRectangle: {
-        x: 0,
-        y: 0.5 - magicHeight,
-        width: 0.5,
-        height: magicHeight,
-      },
-      rotation: (canvas, prev) => {
-        const ctx = canvas.getContext('2d')!;
-        ctx.translate(canvas.width / 2, canvas.height / 2);
-        ctx.rotate(degreeToRadian(90));
-        ctx.drawImage(prev, prev.width / -2, prev.height / -2);
-      },
-    },
-    {
-      // A2
-      rotation: (canvas, prev) => {
-        const ctx = canvas.getContext('2d')!;
-        ctx.translate(0, prev.width / 2);
-        ctx.rotate(degreeToRadian(-30));
-        ctx.drawImage(prev, 0, 0);
-      },
-      relativeRectangle: {
-        x: 0.25,
-        y: 0.5 - magicHeight,
-        width: 0.5,
-        height: magicHeight,
-      },
-    },
-    {
-      // A3
-      rotation: (canvas, prev) => {
-        const ctx = canvas.getContext('2d')!;
-        ctx.rotate(degreeToRadian(-30));
-        ctx.drawImage(prev, prev.width / -2, 0);
-      },
-      relativeRectangle: {
-        x: 0.5,
-        y: 0.5 - magicHeight,
-        width: 0.5,
-        height: magicHeight,
-      },
-    },
-    {
-      // A4
-      rotation: (canvas, prev) => {
-        const ctx = canvas.getContext('2d')!;
-        ctx.translate(0, canvas.height / 2);
-        ctx.rotate(degreeToRadian(-150));
-        ctx.drawImage(prev, canvas.height * -1, 0);
-      },
-      relativeRectangle: {
-        x: 0.5,
-        y: 0.5,
-        width: 0.5,
-        height: magicHeight,
-      },
-    },
-    {
-      // A5
-      rotation: (canvas, prev) => {
-        const ctx = canvas.getContext('2d')!;
-        ctx.translate(canvas.width, canvas.height / 2);
-        ctx.rotate(degreeToRadian(-150));
-        ctx.drawImage(prev, 0, canvas.width * -1);
-      },
-      relativeRectangle: {
-        x: 0.25,
-        y: 0.5,
-        width: 0.5,
-        height: magicHeight,
-      },
-    },
-  ];
-
-  $: allTriangleSetups = drawables.some((d) => !(d instanceof HTMLImageElement))
-    ? []
-    : drawables.map((drawable) =>
+      const allTriangleSetups = drawables.map((drawable) =>
         Array(6)
           .fill(0)
           .map((_, i) => {
             return {
               image: drawable,
               clippingTriangle: i % 2 === 0 ? downwardTriangle : upwardTriangle,
-              ...lookup[i],
+              ...triangleSelectors[i],
             };
           })
       );
+
+      for (let line = 0; line < allTriangleSetups.length; line++) {
+        const triangleSetups = allTriangleSetups[line];
+        for (let i = 0; i < triangleSelectors.length; i++) {
+          const setup = triangleSetups[i];
+          const result = extractRotatedTriangle(
+            inputValues,
+            setup.image,
+            setup.clippingTriangle,
+            setup.relativeRectangle,
+            setup.rotation
+          );
+          onProcessingFinish(result, line, i);
+        }
+      }
+
+      if (drawCuttingLines) {
+        doDrawCuttingLines();
+      }
+      if (drawFoldingLines) {
+        doDrawFoldingLines();
+      }
+
+      dispatch('finish', canvas);
+    }
+  }
 
   function doDrawCuttingLines() {
     ctx.save();
@@ -189,7 +122,7 @@
   }
 
   function onProcessingFinish(
-    { detail: partialCanvas }: { detail: HTMLCanvasElement },
+    partialCanvas: HTMLCanvasElement,
     line: number,
     index: number
   ) {
@@ -214,24 +147,10 @@
         line * (triangleBase / 2)
       );
     }
-    if (line === 3 && index === 5) {
-      dispatch('finish', canvas);
-    }
   }
 </script>
 
 <svelte:options accessors />
-
-<div aria-hidden="true" hidden>
-  {#each allTriangleSetups as triangleSetups, line}
-    {#each triangleSetups as setup, i}
-      <TriangleProcessing
-        {...setup}
-        inputValues="{inputValues}"
-        on:finish="{(ev) => onProcessingFinish(ev, line, i)}" />
-    {/each}
-  {/each}
-</div>
 
 <canvas
   class="box-shadow"

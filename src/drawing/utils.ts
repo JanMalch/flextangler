@@ -90,14 +90,12 @@ export function moveAlongPath(
  *
  * Saves and restores the canvas state.
  * @param ctx the canvas' CanvasRenderingContext2D
- * @param showLines draw the border of the clip
  * @param refPoint a reference point
  * @param clippingShape a list of points
  * @param callback called after `clip` and before `restore`
  */
 export function inClip(
   ctx: CanvasRenderingContext2D,
-  showLines: boolean,
   refPoint: Point,
   clippingShape: Point[],
   callback: () => void
@@ -107,13 +105,6 @@ export function inClip(
   moveAlongPath(ctx, refPoint, clippingShape);
   ctx.closePath();
   ctx.clip();
-
-  if (showLines) {
-    ctx.setLineDash([5, 5]);
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = '#FF0000'; // '#666666';
-    ctx.stroke();
-  }
   callback();
   ctx.restore();
 }
