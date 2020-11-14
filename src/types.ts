@@ -32,14 +32,6 @@ export interface RectangleDef {
 export type Rectangle = Point & RectangleDef;
 
 /**
- * The original input values that only computations rely on.
- */
-export interface InputValues {
-  triangleBase: number;
-  triangleHeight: number;
-}
-
-/**
  * An image with the natural (original) width and height preserved.
  */
 export interface NaturalImage {

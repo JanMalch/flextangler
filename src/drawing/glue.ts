@@ -1,6 +1,6 @@
 import { p } from '../factories';
 import { glueSideParts, glueTopParts } from '../formulas/glue';
-import type { InputValues, Point, Triangle } from '../types';
+import type { Point, Triangle } from '../types';
 import { moveAlongPath } from './utils';
 
 /**
@@ -42,11 +42,11 @@ export function drawGlueArea(
 
 export function drawGlue(
   ctx: CanvasRenderingContext2D,
-  inputValues: InputValues,
+  size: number,
   glueWidth: number
 ) {
-  const topParts = glueTopParts(inputValues);
-  const sideParts = glueSideParts(inputValues);
+  const topParts = glueTopParts(size);
+  const sideParts = glueSideParts(size);
 
   for (const topPart of topParts) {
     drawGlueArea(

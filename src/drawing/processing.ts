@@ -1,6 +1,6 @@
 import { magicHeight } from '../formulas/content';
 import { degreeToRadian } from '../formulas/math';
-import type { InputValues, NaturalImage, ProcessingOptions, Rectangle, RectangleDef, TriangleDef } from '../types';
+import type { NaturalImage, ProcessingOptions, Rectangle, RectangleDef, TriangleDef } from '../types';
 import { drawImage, inClip } from './utils';
 
 /**
@@ -181,22 +181,22 @@ function createCanvas(dimensions: RectangleDef): HTMLCanvasElement {
   return canvas;
 }
 
-export function extractRotatedTriangle(inputValues: InputValues,
+export function extractRotatedTriangle(size: number,
                        image: NaturalImage & CanvasImageSource,
                        clippingTriangle: TriangleDef,
                        relativeRectangle: Rectangle,
                        rotation: ProcessingOptions["rotation"]) {
   const toTriangleCanvas = createCanvas({
-    width: inputValues.triangleBase,
-    height: inputValues.triangleHeight * (magicHeight * 2),
+    width: size,
+    height: size * (magicHeight * 2),
   });
   const rotatedTriangleCanvas = createCanvas({
-    height: inputValues.triangleBase,
-    width: inputValues.triangleHeight * (magicHeight * 2),
+    height: size,
+    width: size * (magicHeight * 2),
   });
   const scaledRotatedTriangleCanvas = createCanvas({
-    width: inputValues.triangleBase,
-    height: inputValues.triangleHeight,
+    width: size,
+    height: size,
   });
 
   loadIntoTriangleCanvas(toTriangleCanvas, image, clippingTriangle, relativeRectangle);

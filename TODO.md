@@ -11,7 +11,7 @@
 - [x] use strict TypeScript mode
 - [x] fix mobile layout
 - [x] in mem canvas
-- [ ] remove `inputValues`: base and height are always the same
+- [x] remove `inputValues`: base and height are always the same
 - [x] find good default size (to match A4 paper)
   - [x] scale preview nicely into viewport
 - [ ] code improvements

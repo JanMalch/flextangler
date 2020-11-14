@@ -12,7 +12,7 @@
   import type { Point } from '../types';
 
   export let drawables: HTMLImageElement[] = [];
-  export let triangleHeight: number;
+  export let size: number;
   export let canvas: HTMLCanvasElement | null = null;
   export let drawCuttingLines = false;
   export let drawFoldingLines = false;
@@ -20,10 +20,7 @@
   const dispatch = createEventDispatcher();
 
   $: ctx = canvas?.getContext('2d')!;
-
-  $: triangleBase = triangleHeight;
-  $: inputValues = { triangleBase, triangleHeight };
-  $: glueWidth = Math.ceil(triangleHeight * 0.4);
+  $: glueWidth = Math.ceil(size * 0.4);
 
   $: {
     if (
@@ -34,7 +31,7 @@
     ) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      drawGlue(ctx, inputValues, glueWidth);
+      drawGlue(ctx, size, glueWidth);
 
       const allTriangleSetups = drawables.map((drawable) =>
         Array(6)
@@ -53,7 +50,7 @@
         for (let i = 0; i < triangleSelectors.length; i++) {
           const setup = triangleSetups[i];
           const result = extractRotatedTriangle(
-            inputValues,
+            size,
             setup.image,
             setup.clippingTriangle,
             setup.relativeRectangle,
@@ -80,21 +77,21 @@
     ctx.beginPath();
     ctx.moveTo(0, 0);
     // bottom zic zac
-    ctx.lineTo(0, triangleHeight * 2);
-    ctx.lineTo(triangleBase, triangleHeight * 2.5);
-    ctx.lineTo(triangleBase * 2, triangleHeight * 2);
-    ctx.lineTo(triangleBase * 3, triangleHeight * 2.5);
-    ctx.lineTo(triangleBase * 4, triangleHeight * 2);
-    ctx.lineTo(triangleBase * 5, triangleHeight * 2.5);
-    ctx.lineTo(triangleBase * 6, triangleHeight * 2);
+    ctx.lineTo(0, size * 2);
+    ctx.lineTo(size, size * 2.5);
+    ctx.lineTo(size * 2, size * 2);
+    ctx.lineTo(size * 3, size * 2.5);
+    ctx.lineTo(size * 4, size * 2);
+    ctx.lineTo(size * 5, size * 2.5);
+    ctx.lineTo(size * 6, size * 2);
     // around glue
     const yDiff = Math.tan(degreeToRadian(90 - magicAngle)) * glueWidth;
-    ctx.lineTo(triangleBase * 6 + glueWidth, triangleHeight * 2 - yDiff);
-    ctx.lineTo(triangleBase * 6 + glueWidth, triangleHeight + yDiff);
-    ctx.lineTo(triangleBase * 6, triangleHeight);
-    ctx.lineTo(triangleBase * 6 + glueWidth, triangleHeight - yDiff);
-    ctx.lineTo(triangleBase * 6 + glueWidth, yDiff);
-    ctx.lineTo(triangleBase * 6, 0);
+    ctx.lineTo(size * 6 + glueWidth, size * 2 - yDiff);
+    ctx.lineTo(size * 6 + glueWidth, size + yDiff);
+    ctx.lineTo(size * 6, size);
+    ctx.lineTo(size * 6 + glueWidth, size - yDiff);
+    ctx.lineTo(size * 6 + glueWidth, yDiff);
+    ctx.lineTo(size * 6, 0);
 
     ctx.closePath();
 
@@ -106,8 +103,8 @@
 
   const drawLine = ({ start, end }: { start: Point; end: Point }) => {
     ctx.beginPath();
-    ctx.moveTo(triangleHeight * start.x, triangleBase * start.y);
-    ctx.lineTo(triangleHeight * end.x, triangleBase * end.y);
+    ctx.moveTo(size * start.x, size * start.y);
+    ctx.lineTo(size * end.x, size * end.y);
     ctx.stroke();
   };
 
@@ -131,20 +128,20 @@
         ctx.drawImage(
           partialCanvas,
           5 * partialCanvas.width,
-          line * (triangleBase / 2)
+          line * (size / 2)
         );
       } else {
         ctx.drawImage(
           partialCanvas,
           (index - 1) * partialCanvas.width,
-          line * (triangleBase / 2)
+          line * (size / 2)
         );
       }
     } else {
       ctx.drawImage(
         partialCanvas,
         index * partialCanvas.width,
-        line * (triangleBase / 2)
+        line * (size / 2)
       );
     }
   }
@@ -154,8 +151,8 @@
 
 <canvas
   class="box-shadow"
-  width="{triangleHeight * 6 + glueWidth}"
-  height="{triangleBase * 2.5}"
+  width="{size * 6 + glueWidth}"
+  height="{size * 2.5}"
   bind:this="{canvas}"></canvas>
 
 <style>

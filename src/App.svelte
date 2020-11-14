@@ -2,9 +2,10 @@
   import FileInputs from './components/FileInputs.svelte';
   import Canvas from './components/Canvas.svelte';
 
+  const size = 200;
+
   let canvasSection: HTMLElement;
   let canvasComponent: any & { canvas: HTMLCanvasElement };
-  let triangleHeight = 200;
 
   let previewVisible = false;
 
@@ -68,7 +69,7 @@
   note that the cutting is based on the largest possible hexagon in the center
   of each image. To make sure you have the desired outcome, you can upload
   squared images that are at least
-  {triangleHeight}&times;{triangleHeight}px in size.
+  {size}&times;{size}px in size.
 </p>
 <p>
   Simply select four images with the boxes below. If you select more than one
@@ -115,7 +116,7 @@
     drawables="{imageElements}"
     drawCuttingLines="{drawCuttingLines}"
     drawFoldingLines="{drawFoldingLines}"
-    triangleHeight="{triangleHeight}"
+    size="{size}"
     on:finish="{onFinish}" />
 </section>
 <section>

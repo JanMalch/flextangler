@@ -1,15 +1,13 @@
-import type { InputValues, Point, TriangleDef } from '../types';
+import type { Point, TriangleDef } from '../types';
 
 /**
- * Moves the given point by multiplying
- * - the `x` coordinate with the `CoreValues#triangleHeight`
- * - and the `y` coordinate with the `CoreValues#triangleBase`
+ * Moves the given point by multiplying both coordinates with the `size`.
  * @param point the point to move
  */
-export function scale(point: Point): (values: InputValues) => Point {
-  return (values) => ({
-    x: point.x * values.triangleHeight,
-    y: point.y * values.triangleBase,
+export function scale(point: Point): (size: number) => Point {
+  return (size) => ({
+    x: point.x * size,
+    y: point.y * size,
   });
 }
 
@@ -20,8 +18,8 @@ export function scale(point: Point): (values: InputValues) => Point {
  */
 export function scaleTriangle(
   triangle: TriangleDef
-): (values: InputValues) => TriangleDef {
-  return (values: InputValues) => {
-    return triangle.map((p) => scale(p)(values)) as TriangleDef;
+): (size: number) => TriangleDef {
+  return (size: number) => {
+    return triangle.map((p) => scale(p)(size)) as TriangleDef;
   };
 }
