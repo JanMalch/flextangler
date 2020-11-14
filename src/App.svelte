@@ -67,7 +67,8 @@
   The app will then transform your images to fit the flextangle template. Please
   note that the cutting is based on the largest possible hexagon in the center
   of each image. To make sure you have the desired outcome, you can upload
-  squared images that are at least 250&times;250px in size.
+  squared images that are at least
+  {triangleHeight}&times;{triangleHeight}px in size.
 </p>
 <p>
   Simply select four images with the boxes below. If you select more than one

@@ -162,7 +162,15 @@
   canvas {
     border: 1px solid #eeeeee;
     border-radius: 4px;
-    padding: 32px;
     background-color: #ffffff;
+    /* width does not affect the data in the canvas */
+    max-width: calc(min(95vw, 1400px) - 2px);
+  }
+
+  @media (min-width: 840px) {
+    canvas {
+      padding: 32px;
+      max-width: calc(min(95vw, 1400px) - 66px);
+    }
   }
 </style>
