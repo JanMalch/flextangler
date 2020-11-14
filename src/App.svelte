@@ -13,6 +13,9 @@
 
   let canvasReady = false;
 
+  let drawCuttingLines = false;
+  let drawFoldingLines = false;
+
   async function onFilesChange({ detail: fileList }: { detail: File[] }) {
     imageElements = []; // make canvas not ready while images are loading
     loadedImages.forEach((img) => {
@@ -76,6 +79,17 @@
 </section>
 
 <section>
+  <label>
+    <input type="checkbox" bind:checked="{drawCuttingLines}" />
+    Draw cutting Lines
+  </label>
+  <label>
+    <input type="checkbox" bind:checked="{drawFoldingLines}" />
+    Draw folding Lines
+  </label>
+</section>
+
+<section>
   <p>
     {#if canvasReady}
       <strong>Your template is ready!</strong>
@@ -98,6 +112,8 @@
   <Canvas
     bind:this="{canvasComponent}"
     drawables="{imageElements}"
+    drawCuttingLines="{drawCuttingLines}"
+    drawFoldingLines="{drawFoldingLines}"
     triangleHeight="{triangleHeight}"
     on:finish="{onFinish}" />
 </section>

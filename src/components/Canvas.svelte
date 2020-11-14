@@ -1,20 +1,22 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import { checks, isDefined } from 'ts-code-contracts';
   import { drawGlue } from '../drawing/glue';
-  import { magicHeight } from '../formulas/content';
+  import { foldingLines, setSupportingLineStyle } from '../drawing/lines';
+  import { magicAngle, magicHeight } from '../formulas/content';
   import { degreeToRadian } from '../formulas/math';
   import { upwardTriangle, downwardTriangle } from '../shapes';
-  import type { ProcessingOptions } from '../types';
+  import type { Point, ProcessingOptions } from '../types';
   import TriangleProcessing from './TriangleProcessing.svelte';
 
   export let drawables: HTMLImageElement[] = [];
   export let triangleHeight: number;
   export let canvas: HTMLCanvasElement | null = null;
+  export let drawCuttingLines = false;
+  export let drawFoldingLines = false;
 
   const dispatch = createEventDispatcher();
 
-  $: ctx = canvas?.getContext('2d');
+  $: ctx = canvas?.getContext('2d')!;
 
   $: triangleBase = triangleHeight;
   $: inputValues = { triangleBase, triangleHeight };
@@ -22,9 +24,17 @@
 
   $: {
     if (ctx != null) {
+      // TODO: clear rect & streamline rendering on changes
       drawGlue(ctx, inputValues, glueWidth);
+      if (drawCuttingLines) {
+        doDrawCuttingLines();
+      }
+      if (drawFoldingLines) {
+        doDrawFoldingLines();
+      }
     }
   }
+
   const lookup: ProcessingOptions[] = [
     {
       // A0
@@ -131,12 +141,58 @@
           })
       );
 
+  function doDrawCuttingLines() {
+    ctx.save();
+
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    // bottom zic zac
+    ctx.lineTo(0, triangleHeight * 2);
+    ctx.lineTo(triangleBase, triangleHeight * 2.5);
+    ctx.lineTo(triangleBase * 2, triangleHeight * 2);
+    ctx.lineTo(triangleBase * 3, triangleHeight * 2.5);
+    ctx.lineTo(triangleBase * 4, triangleHeight * 2);
+    ctx.lineTo(triangleBase * 5, triangleHeight * 2.5);
+    ctx.lineTo(triangleBase * 6, triangleHeight * 2);
+    // around glue
+    const yDiff = Math.tan(degreeToRadian(90 - magicAngle)) * glueWidth;
+    ctx.lineTo(triangleBase * 6 + glueWidth, triangleHeight * 2 - yDiff);
+    ctx.lineTo(triangleBase * 6 + glueWidth, triangleHeight + yDiff);
+    ctx.lineTo(triangleBase * 6, triangleHeight);
+    ctx.lineTo(triangleBase * 6 + glueWidth, triangleHeight - yDiff);
+    ctx.lineTo(triangleBase * 6 + glueWidth, yDiff);
+    ctx.lineTo(triangleBase * 6, 0);
+
+    ctx.closePath();
+
+    setSupportingLineStyle(ctx);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  const drawLine = ({ start, end }: { start: Point; end: Point }) => {
+    ctx.beginPath();
+    ctx.moveTo(triangleHeight * start.x, triangleBase * start.y);
+    ctx.lineTo(triangleHeight * end.x, triangleBase * end.y);
+    ctx.stroke();
+  };
+
+  function doDrawFoldingLines() {
+    ctx.save();
+    setSupportingLineStyle(ctx);
+    foldingLines.vertical.forEach(drawLine);
+    foldingLines.diagonalTLBR.forEach(drawLine);
+    foldingLines.diagonalBLTR.forEach(drawLine);
+
+    ctx.restore();
+  }
+
   function onProcessingFinish(
     { detail: partialCanvas }: { detail: HTMLCanvasElement },
     line: number,
     index: number
   ) {
-    checks(isDefined(ctx), 'Canvas context must be available');
     if (line % 2 === 0) {
       if (index === 0) {
         ctx.drawImage(

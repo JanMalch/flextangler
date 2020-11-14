@@ -1,7 +1,7 @@
 # To-Do
 
 - [x] add glue areas
-- [ ] add checkboxes to draw cutting and folding lines if desired
+- [x] add checkboxes to draw cutting and folding lines if desired
 - [x] fix inputs
   - [x] open twice in Chrome
   - [x] multiple files don't work in Firefox

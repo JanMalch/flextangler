@@ -26,12 +26,6 @@ export function drawGlueArea(
   moveAlongPath(ctx, movePointlike(refPoint, triangle), triangle.points);
   ctx.closePath();
 
-  // outline
-  ctx.setLineDash([5, 5]);
-  ctx.lineWidth = 1;
-  ctx.strokeStyle = '#666666';
-  ctx.stroke();
-
   // background
   ctx.fillStyle = '#eeeeee';
   ctx.fill();
