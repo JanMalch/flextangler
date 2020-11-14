@@ -83,7 +83,7 @@
     Download the image or verify the outcome in the preview beforehand.
   </p>
 </section>
-<section id="actions">
+<section>
   <button
     class="btn box-shadow"
     disabled="{!canvasReady}"
@@ -114,10 +114,6 @@
 <style>
   section {
     margin: 64px 0;
-  }
-
-  #actions {
-    text-align: center;
   }
 
   .btn {
