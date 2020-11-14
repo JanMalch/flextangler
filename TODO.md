@@ -11,3 +11,10 @@
 - [x] use strict TypeScript mode
 - [x] fix mobile layout
 - [x] in mem canvas
+- [ ] remove `inputValues`: base and height are always the same
+- [ ] find good default size (to match A4 paper)
+  - [ ] scale preview nicely into viewport
+- [ ] code improvements
+  - [ ] remove unused `refPoint`s
+  - [ ] add tests where useful and docs everywhere
+  - [ ] improve function names and directory structure
