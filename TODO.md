@@ -15,6 +15,6 @@
 - [x] find good default size (to match A4 paper)
   - [x] scale preview nicely into viewport
 - [ ] code improvements
-  - [ ] remove unused `refPoint`s
+  - [x] remove unused `refPoint`s
   - [ ] add tests where useful and docs everywhere
   - [ ] improve function names and directory structure

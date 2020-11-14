@@ -1,4 +1,3 @@
-import { ORIGIN } from '../factories';
 import { magicHeight } from '../formulas/content';
 import { degreeToRadian } from '../formulas/math';
 import type { InputValues, NaturalImage, ProcessingOptions, Rectangle, RectangleDef, TriangleDef } from '../types';
@@ -111,7 +110,6 @@ function loadIntoTriangleCanvas(
 
   inClip(
     ctx,
-    ORIGIN,
     clippingTriangle.map((point) => ({
       x: point.x * toTriangleCanvas.width,
       y: point.y * toTriangleCanvas.height,
@@ -119,7 +117,6 @@ function loadIntoTriangleCanvas(
     () => {
       drawImage(
         ctx,
-        ORIGIN,
         image,
         {
           x: 0,
@@ -159,7 +156,6 @@ function loadIntoScaledCanvas(
   ctx.save();
   drawImage(
     ctx,
-    ORIGIN,
     rotatedTriangleCanvas,
     {
       x: 0,
