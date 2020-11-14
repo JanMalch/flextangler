@@ -82,11 +82,11 @@
 <section>
   <label>
     <input type="checkbox" bind:checked="{drawCuttingLines}" />
-    Draw cutting Lines
+    Draw cutting lines
   </label>
   <label>
     <input type="checkbox" bind:checked="{drawFoldingLines}" />
-    Draw folding Lines
+    Draw folding lines
   </label>
 </section>
 
