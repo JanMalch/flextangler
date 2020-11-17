@@ -1,10 +1,11 @@
-import { magicHeight } from '../formulas/content';
+import { magicSize } from '../formulas/content';
 import { degreeToRadian } from '../formulas/math';
 import type { NaturalImage, ProcessingOptions, Rectangle, RectangleDef, TriangleDef } from '../types';
 import { drawImage, inClip } from './utils';
 
 /**
  * Options to find and rotate the individual triangles in the hexagon from the image.
+ * The hexagon is rotated so that the flat sides face up- or downwards.
  */
 export const triangleSelectors: ProcessingOptions[] = [
   {
@@ -13,7 +14,7 @@ export const triangleSelectors: ProcessingOptions[] = [
       x: 0,
       y: 0.5,
       width: 0.5,
-      height: magicHeight,
+      height: magicSize,
     },
     rotation: (canvas, prev) => {
       const ctx = canvas.getContext('2d')!;
@@ -26,9 +27,9 @@ export const triangleSelectors: ProcessingOptions[] = [
     // A1
     relativeRectangle: {
       x: 0,
-      y: 0.5 - magicHeight,
+      y: 0.5 - magicSize,
       width: 0.5,
-      height: magicHeight,
+      height: magicSize,
     },
     rotation: (canvas, prev) => {
       const ctx = canvas.getContext('2d')!;
@@ -47,9 +48,9 @@ export const triangleSelectors: ProcessingOptions[] = [
     },
     relativeRectangle: {
       x: 0.25,
-      y: 0.5 - magicHeight,
+      y: 0.5 - magicSize,
       width: 0.5,
-      height: magicHeight,
+      height: magicSize,
     },
   },
   {
@@ -61,9 +62,9 @@ export const triangleSelectors: ProcessingOptions[] = [
     },
     relativeRectangle: {
       x: 0.5,
-      y: 0.5 - magicHeight,
+      y: 0.5 - magicSize,
       width: 0.5,
-      height: magicHeight,
+      height: magicSize,
     },
   },
   {
@@ -78,7 +79,7 @@ export const triangleSelectors: ProcessingOptions[] = [
       x: 0.5,
       y: 0.5,
       width: 0.5,
-      height: magicHeight,
+      height: magicSize,
     },
   },
   {
@@ -93,10 +94,103 @@ export const triangleSelectors: ProcessingOptions[] = [
       x: 0.25,
       y: 0.5,
       width: 0.5,
-      height: magicHeight,
+      height: magicSize,
     },
   },
 ];
+
+/**
+ * Options to find and rotate the individual triangles in the hexagon from the image.
+ * The hexagon is rotated so that the flat sides face to the left or right.
+ */
+export const triangleSelectorsFlatSides: ProcessingOptions[] = [
+  {
+    // A0
+    relativeRectangle: {
+      x: 0.5 - magicSize,
+      y: 0,
+      width: magicSize,
+      height: 0.5,
+    },
+    rotation: (canvas, prev) => {
+      const ctx = canvas.getContext('2d')!;
+      ctx.drawImage(prev, 0, 0);
+    },
+  },
+  {
+    // A1
+    relativeRectangle: {
+      x: 0.5,
+      y: 0,
+      width: magicSize,
+      height: 0.5,
+    },
+    rotation: (canvas, prev) => {
+      const ctx = canvas.getContext('2d')!;
+      ctx.drawImage(prev, 0, 0);
+    },
+  },
+  {
+    // A2
+    rotation: (canvas, prev) => {
+      const ctx = canvas.getContext('2d')!;
+      ctx.translate(0, canvas.height / 2);
+      ctx.rotate(degreeToRadian(-120));
+      ctx.drawImage(prev, canvas.width * -1, 0);
+    },
+    relativeRectangle: {
+      x: 0.5,
+      y: 0.25,
+      width: magicSize,
+      height: 0.5,
+    },
+  },
+  {
+    // A3
+    rotation: (canvas, prev) => {
+      const ctx = canvas.getContext('2d')!;
+      ctx.translate(canvas.width, canvas.height / 2);
+      ctx.rotate(degreeToRadian(-120));
+      ctx.drawImage(prev, 0, canvas.height * -1);
+    },
+    relativeRectangle: {
+      x: 0.5,
+      y: 0.5,
+      width: magicSize,
+      height: 0.5,
+    },
+  },
+  {
+    // A4
+    rotation: (canvas, prev) => {
+      const ctx = canvas.getContext('2d')!;
+      ctx.translate(canvas.width, 0);
+      ctx.rotate(degreeToRadian(120));
+      ctx.drawImage(prev, 0, canvas.height / -2);
+    },
+    relativeRectangle: {
+      x: 0.5 - magicSize,
+      y: 0.5,
+      width: magicSize,
+      height: 0.5,
+    },
+  },
+  {
+    // A5
+    rotation: (canvas, prev) => {
+      const ctx = canvas.getContext('2d')!;
+      ctx.rotate(degreeToRadian(120));
+      ctx.drawImage(prev, 0, canvas.height * -1);
+    },
+    relativeRectangle: {
+      x: 0.5 - magicSize,
+      y: 0.25,
+      width: magicSize,
+      height: 0.5,
+    },
+  },
+];
+
 
 function loadIntoTriangleCanvas(
   toTriangleCanvas: HTMLCanvasElement,
@@ -185,14 +279,16 @@ export function extractRotatedTriangle(size: number,
                        image: NaturalImage & CanvasImageSource,
                        clippingTriangle: TriangleDef,
                        relativeRectangle: Rectangle,
-                       rotation: ProcessingOptions["rotation"]) {
+                       rotation: ProcessingOptions["rotation"],
+                       pointyBottom: boolean) {
+  const smallerSize = size * (magicSize * 2);
   const toTriangleCanvas = createCanvas({
-    width: size,
-    height: size * (magicHeight * 2),
+    width: pointyBottom ? smallerSize : size,
+    height: pointyBottom ? size : smallerSize,
   });
   const rotatedTriangleCanvas = createCanvas({
     height: size,
-    width: size * (magicHeight * 2),
+    width: smallerSize,
   });
   const scaledRotatedTriangleCanvas = createCanvas({
     width: size,

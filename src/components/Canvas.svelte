@@ -5,17 +5,24 @@
   import {
     extractRotatedTriangle,
     triangleSelectors,
+    triangleSelectorsFlatSides,
   } from '../drawing/processing';
   import { magicAngle } from '../formulas/content';
   import { degreeToRadian } from '../formulas/math';
-  import { downwardTriangle, upwardTriangle } from '../shapes';
+  import {
+    downwardTriangle,
+    leftwardTriangle,
+    rightwardTriangle,
+    upwardTriangle,
+  } from '../shapes';
   import type { Point } from '../types';
 
   export let drawables: HTMLImageElement[] = [];
   export let size: number;
+  export let drawCuttingLines: boolean;
+  export let drawFoldingLines: boolean;
+  export let pointyBottom: boolean;
   export let canvas: HTMLCanvasElement | null = null;
-  export let drawCuttingLines = false;
-  export let drawFoldingLines = false;
 
   const dispatch = createEventDispatcher();
 
@@ -33,29 +40,35 @@
         drawables.every((d) => d instanceof HTMLImageElement);
 
       if (imagesAvailable) {
+        const usedSelectors = pointyBottom
+          ? triangleSelectorsFlatSides
+          : triangleSelectors;
+        const triangles = pointyBottom
+          ? [leftwardTriangle, rightwardTriangle]
+          : [downwardTriangle, upwardTriangle];
         const allTriangleSetups = drawables.map((drawable) =>
           Array(6)
             .fill(0)
             .map((_, i) => {
               return {
                 image: drawable,
-                clippingTriangle:
-                  i % 2 === 0 ? downwardTriangle : upwardTriangle,
-                ...triangleSelectors[i],
+                clippingTriangle: triangles[i % 2],
+                ...usedSelectors[i],
               };
             })
         );
 
         for (let line = 0; line < allTriangleSetups.length; line++) {
           const triangleSetups = allTriangleSetups[line];
-          for (let i = 0; i < triangleSelectors.length; i++) {
+          for (let i = 0; i < 6; i++) {
             const setup = triangleSetups[i];
             const result = extractRotatedTriangle(
               size,
               setup.image,
               setup.clippingTriangle,
               setup.relativeRectangle,
-              setup.rotation
+              setup.rotation,
+              pointyBottom
             );
             onProcessingFinish(result, line, i);
           }

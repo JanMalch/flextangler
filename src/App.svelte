@@ -16,6 +16,7 @@
 
   let drawCuttingLines = false;
   let drawFoldingLines = false;
+  let pointyBottom = true;
 
   async function onFilesChange({ detail: fileList }: { detail: File[] }) {
     imageElements = []; // make canvas not ready while images are loading
@@ -86,9 +87,19 @@
 
 <section>
   <label>
+    <input type="checkbox" bind:checked="{pointyBottom}" />
+    Y-Symmetric
+  </label>&nbsp;&nbsp;
+  <small>(looks better, but has a pointy bottom and thus cannot stand upright)</small>
+
+  <br />
+  <br />
+
+  <label>
     <input type="checkbox" bind:checked="{drawCuttingLines}" />
     Draw cutting lines
   </label>
+  &nbsp;&nbsp;
   <label>
     <input type="checkbox" bind:checked="{drawFoldingLines}" />
     Draw folding lines
@@ -116,6 +127,7 @@
     drawables="{imageElements}"
     drawCuttingLines="{drawCuttingLines}"
     drawFoldingLines="{drawFoldingLines}"
+    pointyBottom="{pointyBottom}"
     size="{size}"
     on:finish="{onFinish}" />
 </section>
