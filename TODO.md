@@ -6,7 +6,8 @@
   - [x] open twice in Chrome
   - [x] multiple files don't work in Firefox
 - [x] remove unused code
-- [x] rotate the underlying hexagon, so the result has a flat side on the bottom
+- [x] ~~rotate the underlying hexagon, so the result has a flat side on the bottom~~ ([`c2d04581`](https://github.com/JanMalch/flextangler/commit/c2d04581ec58c4bf09c39d896861012feee2c2d1))
+  - [x] provide an option to chose between both, as both have advantages and disadvantages ([`1265ecaf`](https://github.com/JanMalch/flextangler/commit/1265ecafd60a1ea2dc49e83f42d31bee0b0cc74f))
 - [x] improve typing
 - [x] use strict TypeScript mode
 - [x] fix mobile layout
@@ -18,3 +19,7 @@
   - [x] remove unused `refPoint`s
   - [ ] add tests where useful and docs everywhere
   - [ ] improve function names and directory structure
+- [ ] input improvements  
+  - [ ] show used cut-out in previews
+  - [ ] allow drawing colors
+- [ ] improve options layout
