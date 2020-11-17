@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4](https://github.com/JanMalch/flextangler/compare/v0.0.3...v0.0.4) (2020-11-17)
+
+
+### Features
+
+* add option to chose hexagon orientation ([1265eca](https://github.com/JanMalch/flextangler/commit/1265ecafd60a1ea2dc49e83f42d31bee0b0cc74f))
+* allow the blank template to be downloaded ([eb5261e](https://github.com/JanMalch/flextangler/commit/eb5261e477354b5bdbb8c6bc5085e4e3b021019f))
+
 ### [0.0.3](https://github.com/JanMalch/flextangler/compare/v0.0.2...v0.0.3) (2020-11-14)
 
 
