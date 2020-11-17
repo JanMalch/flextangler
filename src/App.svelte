@@ -45,8 +45,12 @@
     });
   }
 
-  function onFinish() {
-    canvasReady = true;
+  function onFinish({
+    detail: { imagesAvailable, canvas },
+  }: {
+    detail: { canvas: HTMLCanvasElement; imagesAvailable: boolean };
+  }) {
+    canvasReady = imagesAvailable;
   }
 
   function togglePreview() {
@@ -95,18 +99,14 @@
   <p>
     {#if canvasReady}
       <strong>Your template is ready!</strong>
-    {:else}Please select 4 images before continuing.{/if}<br />
+    {:else}Please select 4 images or download the blank template.{/if}<br />
     Download the image or verify the outcome in the preview beforehand.
   </p>
 </section>
 <section>
+  <button class="btn box-shadow" on:click="{downloadAsImage}">Download template</button>
   <button
     class="btn box-shadow"
-    disabled="{!canvasReady}"
-    on:click="{downloadAsImage}">Download template</button>
-  <button
-    class="btn box-shadow"
-    disabled="{!canvasReady}"
     on:click="{togglePreview}">{previewVisible ? 'Hide' : 'Show'}
     preview</button>
 </section>

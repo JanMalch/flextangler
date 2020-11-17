@@ -23,40 +23,42 @@
   $: glueWidth = Math.ceil(size * 0.4);
 
   $: {
-    if (
-      canvas != null &&
-      ctx != null &&
-      drawables.length === 4 &&
-      drawables.every((d) => d instanceof HTMLImageElement)
-    ) {
+    if (canvas != null && ctx != null) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       drawGlue(ctx, size, glueWidth);
 
-      const allTriangleSetups = drawables.map((drawable) =>
-        Array(6)
-          .fill(0)
-          .map((_, i) => {
-            return {
-              image: drawable,
-              clippingTriangle: i % 2 === 0 ? downwardTriangle : upwardTriangle,
-              ...triangleSelectors[i],
-            };
-          })
-      );
+      const imagesAvailable =
+        drawables.length === 4 &&
+        drawables.every((d) => d instanceof HTMLImageElement);
 
-      for (let line = 0; line < allTriangleSetups.length; line++) {
-        const triangleSetups = allTriangleSetups[line];
-        for (let i = 0; i < triangleSelectors.length; i++) {
-          const setup = triangleSetups[i];
-          const result = extractRotatedTriangle(
-            size,
-            setup.image,
-            setup.clippingTriangle,
-            setup.relativeRectangle,
-            setup.rotation
-          );
-          onProcessingFinish(result, line, i);
+      if (imagesAvailable) {
+        const allTriangleSetups = drawables.map((drawable) =>
+          Array(6)
+            .fill(0)
+            .map((_, i) => {
+              return {
+                image: drawable,
+                clippingTriangle:
+                  i % 2 === 0 ? downwardTriangle : upwardTriangle,
+                ...triangleSelectors[i],
+              };
+            })
+        );
+
+        for (let line = 0; line < allTriangleSetups.length; line++) {
+          const triangleSetups = allTriangleSetups[line];
+          for (let i = 0; i < triangleSelectors.length; i++) {
+            const setup = triangleSetups[i];
+            const result = extractRotatedTriangle(
+              size,
+              setup.image,
+              setup.clippingTriangle,
+              setup.relativeRectangle,
+              setup.rotation
+            );
+            onProcessingFinish(result, line, i);
+          }
         }
       }
 
@@ -67,7 +69,7 @@
         doDrawFoldingLines();
       }
 
-      dispatch('finish', canvas);
+      dispatch('finish', { canvas, imagesAvailable });
     }
   }
 
