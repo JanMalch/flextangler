@@ -41,8 +41,7 @@
     "typescript": "^3.9.3"
   },
   "dependencies": {
-    "sirv-cli": "^1.0.0",
-    "ts-code-contracts": "^1.0.0"
+    "sirv-cli": "^1.0.0"
   },
   "prettier": {
     "trailingComma": "es5",
