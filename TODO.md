@@ -25,3 +25,4 @@
 - [ ] improve options layout
 - [ ] allow to switch between current glue template and [origami template](https://youtu.be/ZDivkba68Lk)
 - [ ] enable PWA
+- [ ] merge `global.css` and `bundle.css`
